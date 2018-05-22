@@ -1,0 +1,84 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="author" content="Nicholas Hartunian">
+
+        <meta name="description" content="Generates some stats for salary negotiation practice.">
+
+        <link rel="shortcut icon" href="favicon.ico">
+        <link rel="stylesheet" type="text/css" href="SNStyle.css">
+        <link href='https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300' rel='stylesheet' type='text/css'>
+        <link href='https://fonts.googleapis.com/css?family=Cinzel' rel='stylesheet' type='text/css'>
+        <script src="SNScript.js"></script>
+
+        <title>Negotiation</title>
+        
+    </head>
+    <body>
+        <div id="data-container">
+            <h1 id = "title">Recruiter</h1>
+            <div class = "largeBox">
+                <p id = "posAvg">Position Average: </p>
+            </div>
+            <div class = "largeBox">
+                <p id = "varNum">Budget Range: </p>
+            </div>
+            <table id = "benefits">
+                <tr>
+                    <td>Healthcare</td>
+                    <td id="ben1">Provided</td>
+                </tr>
+                <tr>
+                    <td>401k</td>
+                    <td id="ben2">Not Included</td>
+                </tr>
+                <tr>
+                    <td>Stock Options</td>
+                    <td id="ben3">Not Included</td>
+                </tr>
+                <tr>
+                    <td>Accelerated Salary Review</td>
+                    <td id="ben4">Not Included</td>
+                </tr>
+                <tr>
+                    <td>Extra Vacations/Flex Time</td>
+                    <td id="ben5">Not Included</td>
+                </tr>
+                <tr>
+                    <td>Better Job Title</td>
+                    <td id="ben6">Not Included</td>
+                </tr>
+                <tr>
+                    <td>Latest Equipment</td>
+                    <td id="ben7">Not Included</td>
+                </tr>
+                <tr>
+                    <td>Commute Costs</td>
+                    <td id="ben8">Not Included</td>
+                </tr>
+                <tr>
+                    <td>Cellphone Bill</td>
+                    <td id="ben9">Not Included</td>
+                </tr>
+            </table>
+            
+            <div id="bottom-button-container">
+                <button id = "flip">Flip</button>
+                <button id = "reset">Reset</button>
+            </div>
+        </div>
+        
+        <h1 id="transitionText">Press here if Recruiter has left</h1>
+        
+        <div id="intro-container"><h1 id="avgPrompt">Input the average salary for the position in question</h1>
+            <form>
+                <input type="text" name="avgInput" id="avgInput" value="100,000">
+                <label for="startRec">Recruiter</label><input type="radio" name="startRadio" id="startRec" checked>
+                <label for="startCand">Candidate</label><input type="radio" name="startRadio" id="startCand" value="Candidate">
+                <button id = "start">Negotiate</button>
+            </form>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,120 @@
+body{
+    background: url("img/debut_dark.png");
+    color: azure;
+    font-family: 'Open Sans Condensed', sans-serif;
+    font-size: 2em;
+    margin: .7em;
+}
+
+#data-container{
+    visibility: hidden;
+}
+
+h1{
+    width: 6em;
+    font-family: 'Cinzel', serif;
+    font-size: 2em;
+    margin-bottom: 0em;
+    line-height: 1em;
+}
+
+#title{
+    animation: glow 2s ease-in-out infinite alternate;
+}
+
+#transitionText{
+    visibility: hidden;
+    top: .3em;
+    left: .3em;
+    position: absolute;
+}
+
+.largeBox{
+    line-height: 1em
+}
+
+table, th, td {
+    border: .2em solid rgba(195,195,128,.3);
+    border-collapse: collapse;
+    padding: .5em;
+    font-size: .8em;
+    margin-bottom: .5em;
+}
+
+#bottom-button-container{
+    width: 10em;
+}
+
+button{
+    background-color: transparent;
+    border: 2px solid #56a356;
+    border-radius: 1em;
+    padding: 1em;
+    margin: auto;
+    
+    font-family:monospace;
+    font-size: .5em;
+    color: azure;
+    
+    transition: background-color 1s;
+}
+
+button:hover{
+    background-color: #4bcb4b;
+}
+
+#reset{
+    margin-left: 5em;
+    border: 2px solid #e05555;
+}
+
+#reset:hover{
+    background-color: #ff5a5a;
+}
+
+#intro-container{
+    top: .3em;
+    left: .3em;
+    position: absolute;
+    width: 11.5em;
+    text-align: center;
+}
+
+#avgPrompt{
+    width: 11.5em;
+    font-size: 1em;
+    text-align: center;
+}
+
+input[type=text] {
+    border: none;
+    background-color: rgba(255, 255, 131, 0.4);
+    padding: .5em;
+    font-size: 1em;
+    font-family: monospace;
+    color: azure;
+    display: block;
+    margin: .5em;
+    margin-left: .8em;
+    text-align: center;
+}
+
+input[type=radio]{
+    margin: 1em;
+    transform: scale(1.5);
+}
+
+#start{
+    display: block;
+    font-size: .5em;
+    margin-top: .5em;
+}
+
+@keyframes glow {
+  from {
+    text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #fff, 0 0 20px #59e31c, 0 0 30px #59e31c, 0 0 40px #59e31c, 0 0 50px #59e31c, 0 0 60px #59e31c;
+  }
+  to {
+    text-shadow: 0 0 2px #fff, 0 0 4px #fff, 0 0 8px #fff, 0 0 12px #59e31c, 0 0 15px #59e31c, 0 0 19px #399b0f, 0 0 23px #4abc18, 0 0 26px #4abc18;
+  }
+}
