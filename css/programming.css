@@ -3,26 +3,26 @@
  * Code licensed under the Apache License v2.0.
  * For details, see http://www.apache.org/licenses/LICENSE-2.0.
  */
- 
+
  a:hover{
 	text-decoration:none;
  }
 
 body {
-    margin-top: 50px; /* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
+  margin-top: 50px; /* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
 	background-image: url('../img/grey_wash_wall.png');
 	font-family: 'Roboto', sans-serif;
 	overflow-x:hidden;
 }
 
 .featurette-heading {
-    white-space: nowrap;
+  white-space: nowrap;
 }
 
 #progImg{
-    max-width: 40vw;
-    margin-left: 20px;
-    height: auto;
+  max-width: 40vw;
+  margin-left: 20px;
+  height: auto;
 }
 
 
@@ -30,25 +30,25 @@ body {
 .cloud {
 	width: 200px; height: 60px;
 	background: #fff;
-	
+
 	border-radius: 200px;
 	-moz-border-radius: 200px;
 	-webkit-border-radius: 200px;
-	
-	position: absolute; 
+
+	position: absolute;
 }
 
 .cloud:before, .cloud:after {
 	content: '';
-	position: absolute; 
+	position: absolute;
 	background: #fff;
 	width: 100px; height: 80px;
 	position: absolute; top: -15px; left: 10px;
-	
+
 	border-radius: 100px;
 	-moz-border-radius: 100px;
 	-webkit-border-radius: 100px;
-	
+
 	-webkit-transform: rotate(30deg);
 	transform: rotate(30deg);
 	-moz-transform: rotate(30deg);
@@ -70,7 +70,7 @@ body {
 .x2 {
 	left: 200px;
 	top: 300px;
-	
+
 	-webkit-transform: scale(0.6);
 	-moz-transform: scale(0.6);
 	transform: scale(0.6);
@@ -82,7 +82,7 @@ body {
 
 .x3 {
 	left: -250px; top: 200px;
-	
+
 	-webkit-transform: scale(0.8);
 	-moz-transform: scale(0.8);
 	transform: scale(0.8);
@@ -94,7 +94,7 @@ body {
 
 .x4 {
 	left: 470px; top: 250px;
-	
+
 	-webkit-transform: scale(0.75);
 	-moz-transform: scale(0.75);
 	transform: scale(0.75);
@@ -106,7 +106,7 @@ body {
 
 .x5 {
 	left: -150px; top: 150px;
-	
+
 	-webkit-transform: scale(0.8);
 	-moz-transform: scale(0.8);
 	transform: scale(0.8);
@@ -129,8 +129,8 @@ body {
 	100% {margin-left: -1000px;}
 }
 }
-	
-	
+
+
 #content{
 	background-color: #fff;
 	color: #000;
@@ -141,19 +141,19 @@ body {
 }
 
 .header-image {
-    display: block;
-    width: 100%;
-    text-align: center;
-    background: #c9dbe9;
+  display: block;
+  width: 100%;
+  text-align: center;
+  background: #c9dbe9;
 	background: url('../img/field.jpg') no-repeat center center scroll;
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    background-size: cover;
-    -o-background-size: cover;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  background-size: cover;
+  -o-background-size: cover;
 }
 
 .headline {
-    padding: 120px 0;
+  padding: 120px 0;
 }
 
 h1,h2{
@@ -163,11 +163,9 @@ h1,h2{
 }
 
 .headline h1 {
-    font-size: 130px;
+  font-size: 130px;
 	position: relative;
 	z-index: 1;
-    //background: #fff;
-    //background: rgba(255,255,255,0.9);
 }
 
 .featurette-divider {
@@ -257,7 +255,7 @@ footer a{
 @media(max-width:768px) {
     .container {
         margin: 0 15px;
-		
+
     }
 
     .featurette-divider {
@@ -267,7 +265,7 @@ footer a{
     .featurette-heading {
         font-size: 25px;
     }
-    
+
 }
 
 @media(max-width:668px) {
@@ -282,7 +280,7 @@ footer a{
     .featurette-divider {
         margin: 15px 0;
     }
-    
+
     .header-image{
         background: url('../img/fieldSmall.jpg') no-repeat center center scroll;
     }
@@ -300,7 +298,7 @@ footer a{
     .headline h2 {
         font-size: 42px;
     }
-    
+
     .featurette-image {
         max-width: 60%;
         max-height: 60%;
@@ -315,7 +313,7 @@ footer a{
         margin-bottom: 0px;
         margin-left: 300px;
     }
-    
+
     .header-image{
         background: url('../img/fieldSmall.jpg') no-repeat center center scroll;
     }
@@ -326,7 +324,7 @@ footer a{
     .headline h1 {
         font-size: 50px;
     }
-    
+
     .featurette-divider {
         margin: 5px 0;
     }
@@ -345,13 +343,13 @@ footer a{
         margin-bottom: 0px;
         margin-left: 70px;
     }
-    
+
     .header-image {
         background: url('../img/fieldSmall.jpg') no-repeat center center scroll;
     }
-    
+
     #progImg {
         display: none
     }
-    
+
 }
