@@ -22,10 +22,8 @@ window.onload = function(){
     var topicName = document.getElementById("topic");
 
     initCountries();
-    console.log('hi');
 
     countriesDiv = document.getElementById("countries");
-    //console.log(genCommittee())
 
     settingsForm.onsubmit = function(e){
         var numCountries = numCountriesBox.value;
