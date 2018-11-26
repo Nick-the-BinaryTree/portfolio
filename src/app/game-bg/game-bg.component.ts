@@ -1,12 +1,13 @@
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 
 import { of, BehaviorSubject, Observable } from 'rxjs';
-import { bufferCount, expand, filter, map, share, tap, withLatestFrom } from 'rxjs/operators';
+import { expand, filter, map, share, tap, withLatestFrom } from 'rxjs/operators';
 
 import { IFrameData } from './frame.interface';
-import { clampTo30FPS, runBoundaryCheck } from './game.util';
+import { clampTo30FPS, randomStartPos, randomStartVal, randomStartVelocity, runBoundaryCheck } from './game.util';
 
-type objVelocity = {
+export type boundaries = {top: number, right: number, bottom: number, left: number};
+export type objVelocity = {
   dx: number,
   dy: number
 };
@@ -19,17 +20,36 @@ type canvasObj = {
 } | null;
 type gameStateObj = {objects?: Array<canvasObj>};
 
-const startVelocity = 40;
+const maxRadius = 20;
+const maxVelocity = 100;
+const minRadius = 5;
+const minVelocity = 20;
+
 const boundaries = {
   left: 0,
   top: 0,
   bottom: window.innerHeight,
   right: window.innerWidth
 };
-const objVelocity: objVelocity = {
-  dx: startVelocity,
-  dy: startVelocity
-};
+
+const initObjs = [{
+  ...randomStartPos(boundaries, 20),
+  radius: randomStartVal(maxRadius, minRadius),
+  velocity: randomStartVelocity(maxVelocity, minVelocity),
+  color: 'rgb(255,82,82,0.1)'
+},
+{
+  ...randomStartPos(boundaries, 15),
+  radius: randomStartVal(maxRadius, minRadius),
+  velocity: randomStartVelocity(maxVelocity, minVelocity),
+  color: 'rgb(83,109,254,0.1)'
+},
+{
+  ...randomStartPos(boundaries, 10),
+  radius: randomStartVal(maxRadius, minRadius),
+  velocity: randomStartVelocity(maxVelocity, minVelocity),
+  color: 'rgb(105,240,174,0.1)'
+}];
 
 @Component({
   selector: 'app-game-bg',
@@ -94,8 +114,8 @@ export class GameBgComponent implements AfterViewInit {
     const ctx: CanvasRenderingContext2D 
       = (<HTMLCanvasElement>this.gameArea.nativeElement).getContext('2d');
 
-    ctx.clearRect(0, 0, this.gameArea.nativeElement.clientWidth,
-       this.gameArea.nativeElement.clientHeight);
+    // ctx.clearRect(0, 0, this.gameArea.nativeElement.clientWidth,
+    //    this.gameArea.nativeElement.clientHeight);
 
     state['objects'].forEach((obj: canvasObj) => {
       ctx.fillStyle = obj.color;
@@ -108,26 +128,7 @@ export class GameBgComponent implements AfterViewInit {
 
   update(deltaTime: number, state: gameStateObj): any {
     if(state['objects'] == null) {
-      state['objects'] = [
-        {
-          // Transformation Props
-          x: 40, y: 40, radius: 20,
-          // Movement Props
-          velocity: objVelocity,
-          // Color props
-          color: 'blue'
-        },
-        {
-          x: 200, y: 249, radius: 15,
-          velocity: {dx: -2*objVelocity.dx, dy: 2*objVelocity.dy},
-          color: 'red'
-        },
-        {
-          x: 400, y: 300, radius: 10,
-          velocity: {dx: 3*objVelocity.dx, dy: -3*objVelocity.dy},
-          color: 'green'
-        }
-      ];
+      state['objects'] = initObjs;
     } else {
       state['objects'].forEach((obj: canvasObj) => {
         const hitBoundary = runBoundaryCheck(obj, boundaries);

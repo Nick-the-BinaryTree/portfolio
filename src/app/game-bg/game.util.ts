@@ -1,3 +1,4 @@
+import { boundaries, objVelocity } from './game-bg.component';
 import { IFrameData } from './frame.interface';
 
 export const clampMag = (value: number, min: number, max:number) => {
@@ -18,9 +19,21 @@ export const clampTo30FPS = (frame: IFrameData) => {
     return frame;
 }
 
-export const runBoundaryCheck = (obj: any, 
-    boundaries: {top: number, right: number, bottom: number, left: number}
-    ): string => {
+export const randomStartPos = (boundaries: boundaries, 
+    min: number): {x: number, y: number} => ({
+        x: Math.random()*(boundaries.right-min)+min,
+        y: Math.random()*(boundaries.bottom-min)+min
+    });
+
+export const randomStartVal = (baseVal, min): number => Math.random()*(baseVal-min)+min;
+
+export const randomStartVelocity = (baseVal, min): objVelocity => 
+    ({dx: randomStartVelocityVal(baseVal, min), dy: randomStartVelocityVal(baseVal, min)});
+
+export const randomStartVelocityVal = (baseVal, min): number => (Math.random() < 0.5 ? -1 : 1)
+    *randomStartVal(baseVal, min);
+
+export const runBoundaryCheck = (obj: any, boundaries: boundaries): string => {
     let boundaryHit = null;
 
     if (obj.x + obj.radius > boundaries.right) {
