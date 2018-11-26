@@ -18,25 +18,19 @@ export const clampTo30FPS = (frame: IFrameData) => {
     return frame;
 }
 
-// TODO: make GameObject interface
 export const runBoundaryCheck = (obj: any, 
     boundaries: {top: number, right: number, bottom: number, left: number}
     ): string => {
-    let boundaryHit = '';
+    let boundaryHit = null;
 
-    if (obj.x + obj.width > boundaries.right) {
+    if (obj.x + obj.radius > boundaries.right) {
         boundaryHit = 'right';
-        obj.x = boundaries.right - obj.width;
-    } else if (obj.x < boundaries.left) {
+    } else if (obj.x - obj.radius < boundaries.left) {
         boundaryHit = 'left';
-        obj.x = boundaries.left;
-    }
-    if (obj.y + obj.height >= boundaries.bottom) {
+    } else if (obj.y + obj.radius > boundaries.bottom) {
         boundaryHit = 'bottom';
-        obj.y = boundaries.bottom - obj.height;
-    } else if (obj.y < boundaries.top) {
+    } else if (obj.y - obj.radius < boundaries.top) {
         boundaryHit = 'top';
-        obj.y = boundaries.top;
     }
     return boundaryHit;
 }

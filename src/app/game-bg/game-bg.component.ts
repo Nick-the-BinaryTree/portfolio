@@ -1,97 +1,35 @@
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 
 import { of, BehaviorSubject, Observable } from 'rxjs';
 import { bufferCount, expand, filter, map, share, tap, withLatestFrom } from 'rxjs/operators';
 
 import { IFrameData } from './frame.interface';
-import { clampMag, clampTo30FPS, runBoundaryCheck } from './game.util';
+import { clampTo30FPS, runBoundaryCheck } from './game.util';
 
+type objVelocity = {
+  dx: number,
+  dy: number
+};
+type canvasObj = {
+  x: number,
+  y: number,
+  radius: number,
+  velocity: objVelocity,
+  color: string
+} | null;
+type gameStateObj = {objects?: Array<canvasObj>};
+
+const startVelocity = 40;
 const boundaries = {
   left: 0,
   top: 0,
-  bottom: 300,
-  right: 400
+  bottom: window.innerHeight,
+  right: window.innerWidth
 };
-const baseObjectVelocity = {
-  x: 30,
-  y: 40,
-  maxX: 250,
-  maxY: 200
+const objVelocity: objVelocity = {
+  dx: startVelocity,
+  dy: startVelocity
 };
-const bounceRateChanges = {
-  left: 1.1,
-  top: 1.2,
-  bottom: 1.3,
-  right: 1.4
-};
-
-const calculateStep: (prevFrame: IFrameData) => Observable<IFrameData> =
-  (prevFrame: IFrameData) => Observable.create(observer => {
-    requestAnimationFrame(frameStartTime => {
-      const deltaTime = prevFrame 
-        ? (frameStartTime - prevFrame.frameStartTime) / 1000
-        : 0;
-      
-      observer.next({
-        frameStartTime,
-        deltaTime
-      });
-    });
-  })
-  .pipe(
-    map(clampTo30FPS)
-  );
-
-// TODO: better types
-const update = (deltaTime: number, state: any): any => {
-  if(state['objects'] == null) {
-    state['objects'] = [
-      {
-        // Transformation Props
-        x: 10, y:10, width: 20, height: 30,
-        // Movement Props
-        velocity: baseObjectVelocity
-      },
-      {
-        // Transformation Props
-        x: 200, y: 249, width: 50, height: 20,
-        // Movement Props
-        velocity: {x: -baseObjectVelocity.x, y: 2*baseObjectVelocity.y}
-      }
-    ];
-  } else {
-    state['objects'].forEach(obj => {
-      obj.x = obj.x += obj.velocity.x*deltaTime;
-      obj.y = obj.y += obj.velocity.y*deltaTime;
-
-      const hitBoundary = runBoundaryCheck(obj, boundaries);
-
-      if (hitBoundary) {
-        if (hitBoundary === 'right' || hitBoundary === 'left') {
-          obj.velocity.x *= -bounceRateChanges[hitBoundary];
-        } else {
-          obj.velocity.y *= -bounceRateChanges[hitBoundary];
-        }
-      }
-
-      obj.velocity.x = clampMag(obj.velocity.x, 0, baseObjectVelocity.maxX);
-      obj.velocity.y = clampMag(obj.velocity.y, 0, baseObjectVelocity.maxY);
-    });
-  }
-
-  return state;
-};
-
-const frames$ = of(undefined)
-  .pipe(
-    // emits value of calculateStep
-    expand(val => calculateStep(val)),
-    filter(frame => frame !== undefined),
-    map((frame: IFrameData) => frame.deltaTime),
-    share()
-  );
-
-const gameState$ = new BehaviorSubject({});
 
 @Component({
   selector: 'app-game-bg',
@@ -99,43 +37,113 @@ const gameState$ = new BehaviorSubject({});
   styleUrls: ['./game-bg.component.css']
 })
 export class GameBgComponent implements AfterViewInit {
-  @ViewChild('gameArea') gameArea;
-  @ViewChild('fps') fps;
+  @ViewChild('gameArea') gameArea: ElementRef;
 
   constructor() { }
 
   ngAfterViewInit() {
+    // canvas setup
+    this.gameArea.nativeElement.width = boundaries.right;
+    this.gameArea.nativeElement.height = boundaries.bottom;
+
+    window.addEventListener('resize', () => {
+      this.gameArea.nativeElement.height = boundaries.bottom = window.innerHeight;
+      this.gameArea.nativeElement.width = boundaries.right = window.innerWidth;
+    });
+
     // run game
-    frames$.pipe(
-      withLatestFrom(gameState$),
-      map(([deltaTime, gameState]) => update(deltaTime, gameState)),
-      tap(gameState => gameState$.next(gameState))
+    this.frames$.pipe(
+      withLatestFrom(this.gameState$),
+      map(([deltaTime, gameState]) => this.update(deltaTime, gameState)),
+      tap(gameState => this.gameState$.next(gameState))
     ).subscribe(gameState => {
       this.render(gameState);
     });
-
-    frames$.pipe(
-      bufferCount(10),
-      map(frames => {
-        const total = frames.reduce((acc, curr) => acc + curr, 0);
-
-        return 1/(total/frames.length);
-      })
-    ).subscribe(avg => {
-      this.fps.innerHTML = ''+Math.round(avg);
-    });
   }
 
-// TODO: better types
-render(state: any) {
-  const ctx: CanvasRenderingContext2D 
-    = (<HTMLCanvasElement>this.gameArea.nativeElement).getContext('2d');
+  calculateStep(prevFrame: IFrameData): Observable<IFrameData> {
+    return Observable.create(observer => {
+      requestAnimationFrame(frameStartTime => {
+        const deltaTime = prevFrame 
+          ? (frameStartTime - prevFrame.frameStartTime) / 1000
+          : 0;
+        
+        observer.next({
+          frameStartTime,
+          deltaTime
+        });
+      });
+    })
+    .pipe(
+      map(clampTo30FPS)
+    );
+  }
 
-  ctx.clearRect(0, 0, this.gameArea.clientWidth, this.gameArea.clientHeight);
+  frames$ = of(undefined)
+    .pipe(
+      // emits value of calculateStep
+      expand(val => this.calculateStep(val)),
+      filter(frame => frame !== undefined),
+      map((frame: IFrameData) => frame.deltaTime),
+      share()
+    );
 
-  state['objects'].forEach(obj => {
-    ctx.fillStyle = obj.color;
-    ctx.fillRect(obj.x, obj.y, obj.width, obj.height);
-  });
-};
+  gameState$ = new BehaviorSubject({});
+
+  render(state: gameStateObj) {
+    const ctx: CanvasRenderingContext2D 
+      = (<HTMLCanvasElement>this.gameArea.nativeElement).getContext('2d');
+
+    ctx.clearRect(0, 0, this.gameArea.nativeElement.clientWidth,
+       this.gameArea.nativeElement.clientHeight);
+
+    state['objects'].forEach((obj: canvasObj) => {
+      ctx.fillStyle = obj.color;
+      ctx.beginPath();
+      ctx.arc(obj.x, obj.y, obj.radius, 0, Math.PI*2);
+      ctx.fill();
+      ctx.closePath();
+    });
+  };
+
+  update(deltaTime: number, state: gameStateObj): any {
+    if(state['objects'] == null) {
+      state['objects'] = [
+        {
+          // Transformation Props
+          x: 40, y: 40, radius: 20,
+          // Movement Props
+          velocity: objVelocity,
+          // Color props
+          color: 'blue'
+        },
+        {
+          x: 200, y: 249, radius: 15,
+          velocity: {dx: -2*objVelocity.dx, dy: 2*objVelocity.dy},
+          color: 'red'
+        },
+        {
+          x: 400, y: 300, radius: 10,
+          velocity: {dx: 3*objVelocity.dx, dy: -3*objVelocity.dy},
+          color: 'green'
+        }
+      ];
+    } else {
+      state['objects'].forEach((obj: canvasObj) => {
+        const hitBoundary = runBoundaryCheck(obj, boundaries);
+  
+        if (hitBoundary != null) {
+          if (hitBoundary === 'right' || hitBoundary === 'left') {
+            obj.velocity.dx *= -1;
+          } else {
+            obj.velocity.dy *= -1;
+          }
+        }
+        obj.x = obj.x += obj.velocity.dx*deltaTime;
+        obj.y = obj.y += obj.velocity.dy*deltaTime;
+      });
+    }
+  
+    return state;
+  };
 }
