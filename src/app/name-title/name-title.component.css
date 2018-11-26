@@ -5,11 +5,17 @@ h1 {
     top: 35%;
 
     color: white;
-    font-size: 5em;
+    font-size: 5rem;
     font-weight: 100;
     text-align: center;
 
     animation: fadeIn 5s forwards;
+}
+
+@media (max-width: 500px) {
+    h1 {
+        font-size: 3rem;
+    }
 }
 
 @keyframes fadeIn {

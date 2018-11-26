@@ -4,7 +4,7 @@ import { of, BehaviorSubject, Observable } from 'rxjs';
 import { expand, filter, map, share, tap, withLatestFrom } from 'rxjs/operators';
 
 import { IFrameData } from './frame.interface';
-import { clampTo30FPS, randomStartPos, randomStartVal, randomStartVelocity, runBoundaryCheck } from './game.util';
+import { clampTo30FPS, randomStartPos, randomStartVelocityDir, runBoundaryCheck } from './game.util';
 
 export type boundaries = {top: number, right: number, bottom: number, left: number};
 export type objVelocity = {
@@ -21,9 +21,11 @@ type canvasObj = {
 type gameStateObj = {objects?: Array<canvasObj>};
 
 const maxRadius = 20;
-const maxVelocity = 100;
+const maxVelocity = 80;
 const minRadius = 5;
 const minVelocity = 20;
+
+const midRadius = (maxRadius + minRadius)/2;
 
 const boundaries = {
   left: 0,
@@ -33,22 +35,22 @@ const boundaries = {
 };
 
 const initObjs = [{
-  ...randomStartPos(boundaries, 20),
-  radius: randomStartVal(maxRadius, minRadius),
-  velocity: randomStartVelocity(maxVelocity, minVelocity),
-  color: 'rgb(255,82,82,0.1)'
-},
-{
-  ...randomStartPos(boundaries, 15),
-  radius: randomStartVal(maxRadius, minRadius),
-  velocity: randomStartVelocity(maxVelocity, minVelocity),
+  ...randomStartPos(boundaries, maxRadius),
+  radius: maxRadius,
+  velocity: randomStartVelocityDir(minVelocity),
   color: 'rgb(83,109,254,0.1)'
 },
 {
-  ...randomStartPos(boundaries, 10),
-  radius: randomStartVal(maxRadius, minRadius),
-  velocity: randomStartVelocity(maxVelocity, minVelocity),
+  ...randomStartPos(boundaries, midRadius),
+  radius: midRadius,
+  velocity: randomStartVelocityDir((maxVelocity + minVelocity)/2),
   color: 'rgb(105,240,174,0.1)'
+},
+{
+  ...randomStartPos(boundaries, minRadius),
+  radius: minRadius,
+  velocity: randomStartVelocityDir(maxVelocity),
+  color: 'rgb(255,82,82,0.1)'
 }];
 
 @Component({

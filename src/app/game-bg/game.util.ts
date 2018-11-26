@@ -25,13 +25,19 @@ export const randomStartPos = (boundaries: boundaries,
         y: Math.random()*(boundaries.bottom-min)+min
     });
 
-export const randomStartVal = (baseVal, min): number => Math.random()*(baseVal-min)+min;
+export const randomStartVal = (baseVal: number, min: number): number =>
+    Math.random()*(baseVal-min)+min;
 
-export const randomStartVelocity = (baseVal, min): objVelocity => 
+export const randomStartVelocity = (baseVal: number, min: number): objVelocity =>
     ({dx: randomStartVelocityVal(baseVal, min), dy: randomStartVelocityVal(baseVal, min)});
 
-export const randomStartVelocityVal = (baseVal, min): number => (Math.random() < 0.5 ? -1 : 1)
-    *randomStartVal(baseVal, min);
+export const randomStartVelocityDir = (val: number): objVelocity =>
+    ({dx: randomVelocityDir(val), dy: randomVelocityDir(val)});
+
+export const randomStartVelocityVal = (baseVal: number, min: number): number =>
+    randomVelocityDir(randomStartVal(baseVal, min));
+
+export const randomVelocityDir = (val: number) => val*(Math.random() < 0.5 ? -1 : 1);
 
 export const runBoundaryCheck = (obj: any, boundaries: boundaries): string => {
     let boundaryHit = null;
