@@ -1,4 +1,7 @@
 import { Component } from '@angular/core';
+import { NgRedux, select } from '@angular-redux/store';
+
+import { IAppState } from './store';
 
 @Component({
   selector: 'app-root',
@@ -6,5 +9,8 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
+  @select() page: string;
   title = 'Nicholas Hartunian';
+
+  constructor(private ngRedux: NgRedux<IAppState>) { }
 }

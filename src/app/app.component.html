@@ -1,2 +1,5 @@
-<app-game-bg></app-game-bg>
-<app-name-title></app-name-title>
+<!-- Yeah, we should be using AngularRouter here, but I wanted to Redux! -->
+<p *ngIf="(page | async)==='bio'; else landing">oh hey</p>
+<ng-template #landing>
+    <app-landing-page></app-landing-page>
+</ng-template>
