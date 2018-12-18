@@ -1,0 +1,60 @@
+h2 {
+    font-size: 36px;
+
+    animation: fadeInAndUp 4s forwards;
+}
+
+p {
+    font-size: 20px;
+
+    animation: fadeInAndUp 4s forwards;
+    animation-delay: 1s;
+}
+
+.bio-page-container {
+    background-color: #000;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.bio-text-container {
+    position: absolute;
+    left: 44px;
+    top: 20px;
+
+    line-height: 30px;
+    max-width: 500px;
+}
+
+.bio-text-element {
+    background-color: rgba(0,0,0,0.8);
+    color: white;
+    margin: 12px;
+    opacity: 0;
+    padding: 12px;
+    transform: translateY(36px);
+}
+
+.picture-credits {
+    position: absolute;
+    bottom: 0px;
+    right: 8px;
+
+    color: #fff;
+    font-size: 8px;
+}
+
+@media (max-width: 800px) {
+    .bio-text-container {
+        left: 4%;    
+        max-width: 72%;
+    }
+}
+
+@keyframes fadeInAndUp {
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

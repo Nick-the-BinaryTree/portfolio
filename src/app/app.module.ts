@@ -8,13 +8,15 @@ import { AppComponent } from './app.component';
 import { GameBgComponent } from './game-bg/game-bg.component';
 import { NameTitleComponent } from './name-title/name-title.component';
 import { LandingPageComponent } from './landing-page/landing-page.component';
+import { BioPageComponent } from './bio-page/bio-page.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     GameBgComponent,
     NameTitleComponent,
-    LandingPageComponent
+    LandingPageComponent,
+    BioPageComponent
   ],
   imports: [
     BrowserModule,

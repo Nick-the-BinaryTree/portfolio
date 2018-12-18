@@ -7,7 +7,7 @@ export interface IAppState {
 export function rootReducer(state: IAppState, action): IAppState {
     switch (action.type) {
         case GOTO_BIO_PAGE:
-            return { page: 'landing' };
+            return { page: 'bio' };
         case GOTO_LANDING_PAGE:
             return { page: 'landing' };
         case GOTO_MUN_PAGE:
@@ -18,5 +18,5 @@ export function rootReducer(state: IAppState, action): IAppState {
 }
 
 export const INITIAL_STATE: IAppState = {
-    page: 'landing'
+    page: 'bio'
 };

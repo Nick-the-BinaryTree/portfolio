@@ -68,6 +68,7 @@ export class GameBgComponent implements AfterViewInit {
     this.gameArea.nativeElement.width = boundaries.right;
     this.gameArea.nativeElement.height = boundaries.bottom;
 
+    // TODO: convert to stream
     window.addEventListener('resize', () => {
       this.gameArea.nativeElement.height = boundaries.bottom = window.innerHeight;
       this.gameArea.nativeElement.width = boundaries.right = window.innerWidth;
