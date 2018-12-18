@@ -25,6 +25,7 @@ const MOBILE_WIDTH = 400;
 })
 export class BioPageComponent implements OnInit {
   bgInfo: any;
+  bgLoaded: boolean = false;
   bgURL: string = null;
   photographerCredits: string = '';
   windowWidthCategory: number = 0;
@@ -97,6 +98,11 @@ export class BioPageComponent implements OnInit {
         this.bgURL = this.getSizedBg(this.windowWidthCategory, this.bgInfo.urls);
       }
     })
+  }
+  
+  onBgLoad() {
+    console.log('here');
+    this.bgLoaded = this.bgURL != null;
   }
 
 }

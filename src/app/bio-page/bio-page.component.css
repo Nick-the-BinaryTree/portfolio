@@ -12,9 +12,10 @@ p {
 }
 
 .bio-page-bg {
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
+    display: none;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .bio-page-bg-overlay, .bio-page-container {
@@ -40,9 +41,13 @@ p {
 }
 
 /* Camel case forced by Angular syntax in template */
-.imgFetched {
+.bgLoaded {
+    display: block;
+}
+
+.overlayFadeOut {
     animation: fadeOut 6s forwards;
-    animation-delay: 6s;
+    animation-delay: 4s;
 }
 
 .picture-credits {
@@ -52,10 +57,6 @@ p {
 
     color: #fff;
     font-size: 10px;
-    opacity: 0;
-
-    animation: fadeInAndUp 4s forwards;
-    animation-delay: 6s;
 }
 
 @media (max-width: 800px) {

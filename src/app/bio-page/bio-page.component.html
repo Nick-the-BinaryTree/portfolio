@@ -1,12 +1,18 @@
 <div class="bio-page-container full-page">
-  <div 
+  <img
+    alt="Background image"
     class="bio-page-bg full-page"
-    [style.background-image]="'url(' + bgURL + ')'">
-  </div>
-  <div 
+    (load)="onBgLoad()"
+    [ngClass]="{bgLoaded: bgLoaded}"
+    [src]="bgURL" />
+  <p class="picture-credits">
+    {{photographerCredits}}
+  </p>
+  <div
+    alt="Background image"
     class="bio-page-bg-overlay full-page"
-    [ngClass]="{imgFetched: bgURL != null}">
-  </div>
+    [ngClass]="{overlayFadeOut: bgLoaded}">
+</div>
   <div class="bio-text-container">
     <h2 class="bio-text-element">About Me</h2>
     <p class="bio-text-element">
@@ -17,5 +23,4 @@
       I like Model UN and most books.
     </p>
   </div>
-  <p class="picture-credits">{{photographerCredits}}</p>
 </div>

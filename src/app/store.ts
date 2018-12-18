@@ -18,5 +18,5 @@ export function rootReducer(state: IAppState, action): IAppState {
 }
 
 export const INITIAL_STATE: IAppState = {
-    page: 'bio'
+    page: 'landing'
 };
