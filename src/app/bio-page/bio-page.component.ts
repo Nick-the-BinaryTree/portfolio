@@ -36,12 +36,14 @@ export class BioPageComponent implements OnInit {
   }
 
   async fetchBackground() {
-    const response = await fetch('https://api.unsplash.com/photos/random/'
-      + '?collections=' + BG_COLLECTION_ID
-      + '&orientation=landscape'
-      + '&client_id=' + CLIENT_ID)
-    
-    this.bgInfo = await response.json();
+    try {
+      const response = await fetch('https://api.unsplash.com/photos/random/'
+        + '?collections=' + BG_COLLECTION_ID
+        + '&orientation=landscape'
+        + '&client_id=' + CLIENT_ID)
+      
+      this.bgInfo = await response.json();
+    } catch(e) { }
     this.windowWidthCategory = this.getWindowWidthCategory();
 
     let { name, urls } = this.getBgData(this.bgInfo);
@@ -58,6 +60,10 @@ export class BioPageComponent implements OnInit {
   }
 
   getBgData(bgInfo: any): { name: string, urls: urlsObj } {
+    if (bgInfo == null){
+      return { name: null, urls: null };
+    }
+    
     const { urls, user } = bgInfo;
     const name = user != null ? user.name : null;
 

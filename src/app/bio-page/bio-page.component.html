@@ -1,7 +1,12 @@
-<div 
-  class="bio-page-container full-page"
-  [style.background-image]="'url(' + bgURL + ')'"
-  #bioPageContainer>
+<div class="bio-page-container full-page">
+  <div 
+    class="bio-page-bg full-page"
+    [style.background-image]="'url(' + bgURL + ')'">
+  </div>
+  <div 
+    class="bio-page-bg-overlay full-page"
+    [ngClass]="{imgFetched: bgURL != null}">
+  </div>
   <div class="bio-text-container">
     <h2 class="bio-text-element">About Me</h2>
     <p class="bio-text-element">

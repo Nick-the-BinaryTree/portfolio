@@ -11,11 +11,14 @@ p {
     animation-delay: 1s;
 }
 
-.bio-page-container {
-    background-color: #000;
+.bio-page-bg {
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
+}
+
+.bio-page-bg-overlay, .bio-page-container {
+    background-color: #000;
 }
 
 .bio-text-container {
@@ -36,13 +39,23 @@ p {
     transform: translateY(36px);
 }
 
+/* Camel case forced by Angular syntax in template */
+.imgFetched {
+    animation: fadeOut 6s forwards;
+    animation-delay: 6s;
+}
+
 .picture-credits {
     position: absolute;
     bottom: 0px;
     right: 8px;
 
     color: #fff;
-    font-size: 8px;
+    font-size: 10px;
+    opacity: 0;
+
+    animation: fadeInAndUp 4s forwards;
+    animation-delay: 6s;
 }
 
 @media (max-width: 800px) {
@@ -56,5 +69,11 @@ p {
     100% {
         opacity: 1;
         transform: translateY(0);
+    }
+}
+
+@keyframes fadeOut {
+    100% {
+        opacity: 0;
     }
 }
