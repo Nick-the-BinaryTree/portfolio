@@ -1,3 +1,8 @@
+a {
+    color: white;
+    text-decoration: inherit;
+}
+
 h2 {
     font-size: 36px;
 
@@ -45,6 +50,11 @@ p {
     display: block;
 }
 
+.fadeInPhotoCredits {
+    animation: fadeInAndUp 6s forwards;
+    animation-delay: 8s;
+}
+
 .overlayFadeOut {
     animation: fadeOut 6s forwards;
     animation-delay: 4s;
@@ -57,6 +67,9 @@ p {
 
     color: #fff;
     font-size: 10px;
+
+    opacity: 0;
+    z-index: 2;
 }
 
 @media (max-width: 800px) {

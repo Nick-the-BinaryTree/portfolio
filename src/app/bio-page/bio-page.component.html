@@ -5,8 +5,13 @@
     (load)="onBgLoad()"
     [ngClass]="{bgLoaded: bgLoaded}"
     [src]="bgURL" />
-  <p class="picture-credits">
-    {{photographerCredits}}
+  <p 
+    class="picture-credits"
+    [ngClass]="{fadeInPhotoCredits: bgLoaded}">
+    Photography by
+    <a [href]='photographerURL'>{{photographerName}}</a>
+    on
+    <a href="https://unsplash.com">Unsplash</a>
   </p>
   <div
     alt="Background image"

@@ -12,13 +12,16 @@ import { IAppState } from '../store';
   styleUrls: ['./landing-page.component.css']
 })
 export class LandingPageComponent implements OnInit {
-  keyStream: Subscription;
   munCode: number = 0;
 
   constructor(private ngRedux: NgRedux<IAppState>) { }
 
   ngOnInit() {
-    this.keyStream = fromEvent(document.body, 'keydown')
+    fromEvent(document.body, 'click')
+      .subscribe(() => {
+        this.ngRedux.dispatch({type: GOTO_BIO_PAGE});
+    });
+    fromEvent(document.body, 'keydown')
       .subscribe((x: KeyboardEvent) => {
         if (x.key === 'm' && this.munCode === 0
           || x.key === 'u' && this.munCode === 1) {

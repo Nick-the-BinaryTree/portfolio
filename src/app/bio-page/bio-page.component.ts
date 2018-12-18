@@ -12,7 +12,10 @@ const DEFAULT_BG_INFO = {
     small: 'https://raw.githubusercontent.com/Nick-the-BinaryTree/nick-the-binarytree.github.io/master/src/assets/bgS.jpg'
   },
   user: {
-    name: 'Rebe Adelaida'
+    name: 'Rebe Adelaida',
+    links: {
+      html: 'https://unsplash.com/@rrebba'
+    }
   }
 };
 const MEDIUM_WIDTH = 1080;
@@ -27,7 +30,8 @@ export class BioPageComponent implements OnInit {
   bgInfo: any;
   bgLoaded: boolean = false;
   bgURL: string = null;
-  photographerCredits: string = '';
+  photographerName: string = '';
+  photographerURL: string = '';
   windowWidthCategory: number = 0;
 
   constructor() { }
@@ -47,28 +51,35 @@ export class BioPageComponent implements OnInit {
     } catch(e) { }
     this.windowWidthCategory = this.getWindowWidthCategory();
 
-    let { name, urls } = this.getBgData(this.bgInfo);
+    let { html, name, urls } = this.getBgData(this.bgInfo);
 
     if (urls == null || name == null) {
       this.bgInfo = DEFAULT_BG_INFO;
-      name = DEFAULT_BG_INFO.user.name;
-      urls = DEFAULT_BG_INFO.urls;
+      ({ html, name, urls } = this.getBgData(this.bgInfo));
     }
     this.bgURL = this.getSizedBg(this.windowWidthCategory, urls)
-    this.photographerCredits = "Photography by " + name + ' on Unsplash'
+    this.photographerName = name;
+    this.photographerURL = html;
 
     this.initWindowResizeHandler();
   }
 
-  getBgData(bgInfo: any): { name: string, urls: urlsObj } {
+  getBgData(bgInfo: any): { html: string, name: string, urls: urlsObj } {
     if (bgInfo == null){
-      return { name: null, urls: null };
+      return { html: null, name: null, urls: null };
     }
-    
     const { urls, user } = bgInfo;
-    const name = user != null ? user.name : null;
+    let html, links, name;
 
-    return { name, urls }
+    if (user != null) {
+      links = user.links;
+      name = user.name;
+
+      if (links != null) {
+        html = links.html;
+      }
+    }
+    return { html, name, urls }
   }
 
   getWindowWidthCategory(): number {
