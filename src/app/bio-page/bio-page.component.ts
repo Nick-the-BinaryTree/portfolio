@@ -7,9 +7,9 @@ const CLIENT_ID = '813f1db96865d9d36ff6e9d5623b0da770d4b7bd4c05e6a764161e3460135
 const BG_COLLECTION_ID = '3684874';
 const DEFAULT_BG_INFO = {
   urls: {
-    full: '../../assets/bgL.jpg',
-    regular: '../../assets/bgM.jpg',
-    small: '../../assets/bgS.jpg'
+    full: 'https://raw.githubusercontent.com/Nick-the-BinaryTree/nick-the-binarytree.github.io/master/src/assets/bgL.jpg',
+    regular: 'https://raw.githubusercontent.com/Nick-the-BinaryTree/nick-the-binarytree.github.io/master/src/assets/bgM.jpg',
+    small: 'https://raw.githubusercontent.com/Nick-the-BinaryTree/nick-the-binarytree.github.io/master/src/assets/bgS.jpg'
   },
   user: {
     name: 'Rebe Adelaida'
@@ -55,7 +55,7 @@ export class BioPageComponent implements OnInit {
       urls = DEFAULT_BG_INFO.urls;
     }
     this.bgURL = this.getSizedBg(this.windowWidthCategory, urls)
-    this.photographerCredits = name + ' on Unsplash'
+    this.photographerCredits = "Photography by " + name + ' on Unsplash'
 
     this.initWindowResizeHandler();
   }
@@ -101,7 +101,6 @@ export class BioPageComponent implements OnInit {
   }
   
   onBgLoad() {
-    console.log('here');
     this.bgLoaded = this.bgURL != null;
   }
 

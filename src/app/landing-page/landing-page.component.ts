@@ -18,7 +18,7 @@ export class LandingPageComponent implements OnInit {
   constructor(private ngRedux: NgRedux<IAppState>) { }
 
   ngOnInit() {
-    this.keyStream = fromEvent(document.body, 'keyup')
+    this.keyStream = fromEvent(document.body, 'keydown')
       .subscribe((x: KeyboardEvent) => {
         if (x.key === 'm' && this.munCode === 0
           || x.key === 'u' && this.munCode === 1) {
