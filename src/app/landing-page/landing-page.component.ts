@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { NgRedux, select } from '@angular-redux/store';
+import { NgRedux } from '@angular-redux/store';
 
-import { fromEvent, Subscription } from 'rxjs';
+import { fromEvent } from 'rxjs';
 
 import { GOTO_BIO_PAGE, GOTO_MUN_PAGE } from '../actions';
 import { IAppState } from '../store';

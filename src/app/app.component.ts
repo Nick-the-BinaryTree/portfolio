@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { NgRedux, select } from '@angular-redux/store';
 
+import { Observable } from 'rxjs';
+
 import { IAppState } from './store';
 
 @Component({
@@ -9,7 +11,7 @@ import { IAppState } from './store';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  @select() page: string;
+  @select() page: Observable<string>;
   title = 'Nicholas Hartunian';
 
   constructor(private ngRedux: NgRedux<IAppState>) { }
