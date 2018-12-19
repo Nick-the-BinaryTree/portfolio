@@ -5,7 +5,12 @@
     (load)="onBgLoad()"
     [ngClass]="{bgLoaded: bgLoaded}"
     [src]="bgURL" />
-  <p 
+  <div
+    alt="Background image"
+    class="bio-page-bg-overlay full-page"
+    [ngClass]="{overlayFadeOut: bgLoaded}">
+</div>
+<p 
     class="picture-credits"
     [ngClass]="{fadeInPhotoCredits: bgLoaded}">
     Photography by
@@ -13,11 +18,6 @@
     on
     <a href="https://unsplash.com">Unsplash</a>
   </p>
-  <div
-    alt="Background image"
-    class="bio-page-bg-overlay full-page"
-    [ngClass]="{overlayFadeOut: bgLoaded}">
-</div>
   <div class="bio-text-container">
     <h2 class="bio-text-element">About Me</h2>
     <p class="bio-text-element">
