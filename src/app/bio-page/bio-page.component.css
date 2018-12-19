@@ -34,6 +34,8 @@ p {
 
     line-height: 30px;
     max-width: 500px;
+
+    z-index: 3;
 }
 
 .bio-text-element {
@@ -84,6 +86,12 @@ p {
     .bio-text-container {
         left: 4%;    
         max-width: 72%;
+    }
+}
+
+@media (max-height: 400px) {
+    .bio-text-container {
+        max-width: 92%;
     }
 }
 

@@ -3,6 +3,7 @@ import { fromEvent } from 'rxjs';
 
 type urlsObj = { full: string, regular: string, small: string };
 
+const APP_NAME = 'nicholashartunian.com';
 const CLIENT_ID = '813f1db96865d9d36ff6e9d5623b0da770d4b7bd4c05e6a764161e3460135296';
 const BG_COLLECTION_ID = '3684874';
 const DEFAULT_BG_INFO = {
@@ -45,7 +46,9 @@ export class BioPageComponent implements OnInit {
       const response = await fetch('https://api.unsplash.com/photos/random/'
         + '?collections=' + BG_COLLECTION_ID
         + '&orientation=landscape'
-        + '&client_id=' + CLIENT_ID)
+        + '&client_id=' + CLIENT_ID
+        + '&utm_source' + APP_NAME
+        + '&utm_medium=referral');
       
       this.bgInfo = await response.json();
     } catch(e) { }
