@@ -83,7 +83,7 @@ export class GameBgComponent implements AfterViewInit {
     this.animationService.getRender(ctx, state);
   };
 
-  update(deltaTime: number, state: gameStateObj): any {
+  update(deltaTime: number, state: gameStateObj): gameStateObj {
     return this.animationService.getUpdate(boundaries, deltaTime, state);
   }
 }

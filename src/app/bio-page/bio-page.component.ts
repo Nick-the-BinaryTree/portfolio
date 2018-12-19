@@ -15,7 +15,7 @@ const DEFAULT_BG_INFO = {
   user: {
     name: 'Rebe Adelaida',
     links: {
-      html: 'https://unsplash.com/@rrebba'
+      html: 'https://unsplash.com/@rrebba?utm_source=' + APP_NAME + '&utm_medium=referral'
     }
   }
 };
@@ -46,9 +46,7 @@ export class BioPageComponent implements OnInit {
       const response = await fetch('https://api.unsplash.com/photos/random/'
         + '?collections=' + BG_COLLECTION_ID
         + '&orientation=landscape'
-        + '&client_id=' + CLIENT_ID
-        + '&utm_source' + APP_NAME
-        + '&utm_medium=referral');
+        + '&client_id=' + CLIENT_ID);
       
       this.bgInfo = await response.json();
     } catch(e) { }
@@ -62,7 +60,7 @@ export class BioPageComponent implements OnInit {
     }
     this.bgURL = this.getSizedBg(this.windowWidthCategory, urls)
     this.photographerName = name;
-    this.photographerURL = html;
+    this.photographerURL = this.getUTMURL(html);
 
     this.initWindowResizeHandler();
   }
@@ -83,6 +81,10 @@ export class BioPageComponent implements OnInit {
       }
     }
     return { html, name, urls }
+  }
+
+  getUTMURL(url: string) {
+    return url + '?utm_source=' + APP_NAME + '&utm_medium=referral';
   }
 
   getWindowWidthCategory(): number {
