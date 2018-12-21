@@ -12,7 +12,8 @@
 </div>
 <p 
     class="picture-credits"
-    [ngClass]="{fadeInPhotoCredits: bgLoaded}">
+    [ngClass]="{fadeInPhotoCredits: bgLoaded}"
+    [style.display]="bgLoaded ? 'block' : 'none'">
     Photography by
     <a [href]='photographerURL'>{{photographerName}}</a>
     on

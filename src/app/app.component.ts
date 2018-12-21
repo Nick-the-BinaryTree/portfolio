@@ -3,7 +3,7 @@ import { NgRedux, select } from '@angular-redux/store';
 
 import { Observable } from 'rxjs';
 
-import { IAppState } from './store';
+import { IAppState, PAGE } from './store';
 
 @Component({
   selector: 'app-root',
@@ -11,7 +11,8 @@ import { IAppState } from './store';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  @select() page: Observable<string>;
+  @select() page: Observable<PAGE>;
+  PAGE = PAGE; // so template can use enum
   title = 'Nicholas Hartunian';
 
   constructor(private ngRedux: NgRedux<IAppState>) { }

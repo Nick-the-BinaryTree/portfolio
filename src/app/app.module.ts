@@ -9,6 +9,7 @@ import { GameBgComponent } from './game-bg/game-bg.component';
 import { NameTitleComponent } from './name-title/name-title.component';
 import { LandingPageComponent } from './landing-page/landing-page.component';
 import { BioPageComponent } from './bio-page/bio-page.component';
+import { ConnectPageComponent } from './connect-page/connect-page.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { BioPageComponent } from './bio-page/bio-page.component';
     GameBgComponent,
     NameTitleComponent,
     LandingPageComponent,
-    BioPageComponent
+    BioPageComponent,
+    ConnectPageComponent
   ],
   imports: [
     BrowserModule,

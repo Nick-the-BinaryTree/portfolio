@@ -1,5 +1,3 @@
-<!-- Yeah, we should be using AngularRouter here, but I wanted to Redux! -->
-<app-bio-page *ngIf="(page | async)==='bio'; else landing">oh hey</app-bio-page>
-<ng-template #landing>
-    <app-landing-page></app-landing-page>
-</ng-template>
+<app-bio-page *ngIf="(page | async)===PAGE.BIO"></app-bio-page>
+<app-connect-page *ngIf="(page | async)===PAGE.CONNECT"></app-connect-page>
+<app-landing-page *ngIf="(page | async)===PAGE.LANDING"></app-landing-page>

@@ -8,14 +8,7 @@ import { AnimationService } from '../animation.service';
 import { IFrameData } from './frame.interface';
 import { clampTo30FPS } from './game.util';
 
-import { gameStateObj } from '../animation.service';
-
-const boundaries = {
-  left: 0,
-  top: 0,
-  bottom: window.innerHeight,
-  right: window.innerWidth
-};
+import { boundariesType, gameStateObj } from '../animation.service';
 
 @Component({
   selector: 'app-game-bg',
@@ -24,17 +17,29 @@ const boundaries = {
 })
 export class GameBgComponent implements AfterViewInit {
   @ViewChild('gameArea') gameArea: ElementRef;
+  bgColor: string;
+  boundaries: boundariesType = {
+    left: 0,
+    top: 0,
+    bottom: window.innerHeight,
+    right: window.innerWidth
+  };
 
   constructor(private animationService: AnimationService) { }
 
+  ngOnInit() {
+    // triggered before DOM updates
+    this.bgColor = this.animationService.getBgColor();
+  }
+
   ngAfterViewInit() {
-    // canvas setup
-    this.gameArea.nativeElement.width = boundaries.right;
-    this.gameArea.nativeElement.height = boundaries.bottom;
+    // this does not appear to work with template directives
+    this.gameArea.nativeElement.width = this.boundaries.right = window.innerWidth;
+    this.gameArea.nativeElement.height = this.boundaries.bottom = window.innerHeight;
 
     fromEvent(window, 'resize').subscribe(() => {
-      this.gameArea.nativeElement.height = boundaries.bottom = window.innerHeight;
-      this.gameArea.nativeElement.width = boundaries.right = window.innerWidth;
+      this.gameArea.nativeElement.width = this.boundaries.right = window.innerWidth;
+      this.gameArea.nativeElement.height = this.boundaries.bottom = window.innerHeight;
     });
 
     // run game
@@ -84,6 +89,6 @@ export class GameBgComponent implements AfterViewInit {
   };
 
   update(deltaTime: number, state: gameStateObj): gameStateObj {
-    return this.animationService.getUpdate(boundaries, deltaTime, state);
+    return this.animationService.getUpdate(this.boundaries, deltaTime, state);
   }
 }
