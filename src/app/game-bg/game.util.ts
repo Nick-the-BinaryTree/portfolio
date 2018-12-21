@@ -1,4 +1,4 @@
-import { boundariesType, objVelocity } from '../animation.service';
+import { boundariesType, objVelocity, canvasObj } from '../animation.service';
 import { IFrameData } from './frame.interface';
 
 export const clampMag = (value: number, min: number, max:number) => {
@@ -52,4 +52,28 @@ export const runBoundaryCheck = (obj: any, boundaries: boundariesType): string =
         boundaryHit = 'top';
     }
     return boundaryHit;
+}
+
+export const trailObjGen = (count: number,
+    boundaries: boundariesType, r, v: number, 
+    BLUE: string, GREEN: string, RED: string): Array<canvasObj> => {
+    const res = [];
+
+    for (let i=0; i<count; i++) {
+        let color = BLUE;
+
+        if (i % 3 === 0) {
+            color = RED;
+        } else if (i % 2 === 0) {
+            color = GREEN;
+        }
+
+        res.push({
+            ...randomStartPos(boundaries, r),
+          radius: r,
+          velocity: randomStartVelocityDir(v),
+          color
+        });
+    }
+    return res;
 }

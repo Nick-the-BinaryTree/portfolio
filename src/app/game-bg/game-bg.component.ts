@@ -30,6 +30,7 @@ export class GameBgComponent implements AfterViewInit {
   ngOnInit() {
     // triggered before DOM updates
     this.bgColor = this.animationService.getBgColor();
+    this.animationService.getCustomInit();
   }
 
   ngAfterViewInit() {

@@ -29,5 +29,5 @@ export function rootReducer(state: IAppState, action): IAppState {
 }
 
 export const INITIAL_STATE: IAppState = {
-    page: PAGE.LANDING
+    page: PAGE.CONNECT
 };

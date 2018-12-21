@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { select, NgRedux } from '@angular-redux/store';
 
-import { Observable } from 'rxjs';
+import { Observable, fromEvent } from 'rxjs';
 
 import { IAppState, PAGE } from './store';
 
 import { randomStartPos, randomStartVelocityDir,
-  runBoundaryCheck } from './game-bg/game.util';
+  runBoundaryCheck, trailObjGen } from './game-bg/game.util';
 
 export type boundariesType = {top: number, right: number, bottom: number, left: number};
 export type objVelocity = {
@@ -22,17 +22,26 @@ export type canvasObj = {
 } | null;
 export type gameStateObj = {objects?: Array<canvasObj>};
 
-const maxRadius = 20;
-const maxVelocity = 80;
-const minRadius = 5;
-const minVelocity = 20;
-const midRadius = (maxRadius + minRadius)/2;
+const BLUE = 'rgb(83,109,254,0.1)';
+const GREEN = 'rgb(105,240,174,0.1)';
+const RED = 'rgb(255,82,82,0.1)';
+
+const MAX_RADIUS = 20;
+const MIN_RADIUS = 5;
+const MID_RADIUS = (MAX_RADIUS + MIN_RADIUS)/2;
+
+const MAX_VELOCITY = 80;
+const MIN_VELOCITY = 20;
+const MID_VELOCITY = (MAX_VELOCITY + MIN_VELOCITY)/2;
+
+const NUM_TRAIL_OBJS = 3;
 
 @Injectable({
   providedIn: 'root'
 })
 export class AnimationService {
   @select() page: Observable<string>;
+  mousePos: { x: number, y: number };
   pageString: PAGE;
 
   constructor(private ngRedux: NgRedux<IAppState>) {
@@ -49,70 +58,103 @@ export class AnimationService {
     }
   }
 
+  getCustomInit() {
+    switch (this.pageString) {
+      case PAGE.CONNECT:
+        fromEvent(window, 'mousemove')
+          .subscribe((e: MouseEvent) => {
+            this.mousePos = { x: e.clientX, y: e.clientY };
+          });
+      case PAGE.LANDING:
+          return;
+    }
+  }
+
   getInitObjs(boundaries: boundariesType): Array<any> {
     switch(this.pageString) {
       case PAGE.CONNECT:
-        return [];
+        return trailObjGen(NUM_TRAIL_OBJS, boundaries, MIN_RADIUS,
+          MID_VELOCITY, BLUE, GREEN, RED);
       case PAGE.LANDING:
         return [{
-          ...randomStartPos(boundaries, maxRadius),
-          radius: maxRadius,
-          velocity: randomStartVelocityDir(minVelocity),
-          color: 'rgb(83,109,254,0.1)'
+          ...randomStartPos(boundaries, MAX_RADIUS),
+          radius: MIN_RADIUS,
+          velocity: randomStartVelocityDir(MIN_VELOCITY),
+          color: BLUE
         },
         {
-          ...randomStartPos(boundaries, midRadius),
-          radius: midRadius,
-          velocity: randomStartVelocityDir((maxVelocity + minVelocity)/2),
-          color: 'rgb(105,240,174,0.1)'
+          ...randomStartPos(boundaries, MID_RADIUS),
+          radius: MID_RADIUS,
+          velocity: randomStartVelocityDir(MID_VELOCITY),
+          color: GREEN
         },
         {
-          ...randomStartPos(boundaries, minRadius),
-          radius: minRadius,
-          velocity: randomStartVelocityDir(maxVelocity),
-          color: 'rgb(255,82,82,0.1)'
+          ...randomStartPos(boundaries, MIN_RADIUS),
+          radius: MIN_RADIUS,
+          velocity: randomStartVelocityDir(MAX_VELOCITY),
+          color: RED
         }];
     }
   }
 
   getRender(ctx: CanvasRenderingContext2D, state: gameStateObj) {
+    let trail: boolean;
+
     switch(this.pageString) {
       case PAGE.CONNECT:
-        return state;
+        trail = false;
       case PAGE.LANDING:
-        state['objects'].forEach((obj: canvasObj) => {
-          ctx.fillStyle = obj.color;
-          ctx.beginPath();
-          ctx.arc(obj.x, obj.y, obj.radius, 0, Math.PI*2);
-          ctx.fill();
-          ctx.closePath();
-        });
-      }
+        trail = true;
+    }
+
+    if (!trail) {
+      ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+    }
+
+    state['objects'].forEach((obj: canvasObj) => {
+      ctx.fillStyle = obj.color;
+      ctx.beginPath();
+      ctx.arc(obj.x, obj.y, obj.radius, 0, Math.PI*2);
+      ctx.fill();
+      ctx.closePath();
+    });
   }
 
   getUpdate(boundaries: boundariesType, 
     deltaTime: number, state: gameStateObj): gameStateObj {
+    if(state['objects'] == null) {
+      state['objects'] = this.getInitObjs(boundaries);
+    }
     switch(this.pageString) {
       case PAGE.CONNECT:
+        state['objects'].forEach((obj: canvasObj) => {
+          const hitBoundary = runBoundaryCheck(obj, boundaries);
+    
+          if (hitBoundary != null) {
+            if (hitBoundary === 'right' || hitBoundary === 'left') {
+              obj.velocity.dx *= -1;
+            } else {
+              obj.velocity.dy *= -1;
+            }
+          }
+          obj.x = obj.x += obj.velocity.dx*deltaTime;
+          obj.y = obj.y += obj.velocity.dy*deltaTime;
+        });
         return state;
       case PAGE.LANDING:
-        if(state['objects'] == null) {
-          state['objects'] = this.getInitObjs(boundaries);
-        } else {
-          state['objects'].forEach((obj: canvasObj) => {
-            const hitBoundary = runBoundaryCheck(obj, boundaries);
-      
-            if (hitBoundary != null) {
-              if (hitBoundary === 'right' || hitBoundary === 'left') {
-                obj.velocity.dx *= -1;
-              } else {
-                obj.velocity.dy *= -1;
-              }
+        state['objects'].forEach((obj: canvasObj) => {
+          const hitBoundary = runBoundaryCheck(obj, boundaries);
+    
+          if (hitBoundary != null) {
+            if (hitBoundary === 'right' || hitBoundary === 'left') {
+              obj.velocity.dx *= -1;
+            } else {
+              obj.velocity.dy *= -1;
             }
-            obj.x = obj.x += obj.velocity.dx*deltaTime;
-            obj.y = obj.y += obj.velocity.dy*deltaTime;
-          });
-        }
+          }
+          obj.x = obj.x += obj.velocity.dx*deltaTime;
+          obj.y = obj.y += obj.velocity.dy*deltaTime;
+        });
         return state;
     }
   }
