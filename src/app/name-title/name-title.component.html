@@ -1,6 +1,6 @@
 <div class="full-page title-container">
     <h1
-    [ngClass]="{hide: orientationChanged}"
+    [style.display]="orientationChanged ? 'none' : 'block'"
     #myname>
         Nicholas Hartunian
     </h1>
