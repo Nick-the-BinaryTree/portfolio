@@ -1,4 +1,4 @@
-img {
+svg {
     width: 15vw;
     max-width: 138px;
     height: auto;
@@ -16,4 +16,12 @@ img {
     display: flex;
     justify-content: space-around;
     align-items: center;
+    padding: 12px;
+}
+
+@media (max-width: 800px) {
+    svg {
+        filter: invert(80%);
+        opacity: 1;
+    }
 }
