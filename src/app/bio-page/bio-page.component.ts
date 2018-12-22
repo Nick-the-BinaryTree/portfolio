@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { fromEvent } from 'rxjs';
+import { fromEvent, Subscription } from 'rxjs';
 
 type urlsObj = { full: string, regular: string, small: string };
 
@@ -33,6 +33,7 @@ export class BioPageComponent implements OnInit {
   bgURL: string = null;
   photographerName: string = '';
   photographerURL: string = '';
+  resizeHandler: Subscription;
   windowWidthCategory: number = 0;
 
   constructor() { }
@@ -106,7 +107,8 @@ export class BioPageComponent implements OnInit {
   }
 
   initWindowResizeHandler() {
-    fromEvent(window, 'resize').subscribe(()  => {
+    this.resizeHandler = fromEvent(window, 'resize')
+      .subscribe(()  => {
       const curWindowWidthCategory = this.getWindowWidthCategory();
       
       if (curWindowWidthCategory != this.windowWidthCategory) {
@@ -120,4 +122,7 @@ export class BioPageComponent implements OnInit {
     this.bgLoaded = this.bgURL != null;
   }
 
+  ngOnDestroy() {
+    this.resizeHandler.unsubscribe();
+  }
 }

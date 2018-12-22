@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { select, NgRedux } from '@angular-redux/store';
 
-import { fromEvent, Observable } from 'rxjs';
+import { fromEvent, Observable, Subscription } from 'rxjs';
 
 import { IAppState, PAGE } from './store';
 
@@ -30,11 +30,11 @@ const GREEN = 'rgb(105,240,174,0.1)';
 const RED = 'rgb(255,82,82,0.1)';
 
 const MAX_RADIUS = 20;
-const MIN_RADIUS = 5;
+const MIN_RADIUS = 10;
 const MID_RADIUS = (MAX_RADIUS + MIN_RADIUS)/2;
 
 const MAX_VELOCITY = 80;
-const MIN_VELOCITY = 20;
+const MIN_VELOCITY = 40;
 const MID_VELOCITY = (MAX_VELOCITY + MIN_VELOCITY)/2;
 
 const BURST_OFFSET = 140;
@@ -46,12 +46,13 @@ const WITHER = 120;
   providedIn: 'root'
 })
 export class AnimationService {
-  @select() page: Observable<string>;
+  @select() page$: Observable<string>;
+  pageChange: Subscription;
   pageString: PAGE;
 
   constructor(private ngRedux: NgRedux<IAppState>) {
     // apparently, this doesn't work in the Angular init methods
-    this.page.subscribe((x: PAGE) => {this.pageString = x});
+    this.pageChange = this.page$.subscribe((x: PAGE) => {this.pageString = x});
    }
 
   getBgColor(): string {
@@ -142,7 +143,7 @@ export class AnimationService {
     
           if (hitBoundary != null) {
             if (hitBoundary === 'right' || hitBoundary === 'left') {
-              obj.velocity.dy *= -1;
+              obj.velocity.dx *= -1;
             } else {
               obj.velocity.dy *= -1;
             }
@@ -152,5 +153,9 @@ export class AnimationService {
         });
         return state;
     }
+  }
+
+  ngOnDestroy() {
+    this.pageChange.unsubscribe();
   }
 }

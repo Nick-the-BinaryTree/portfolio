@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 
-import { fromEvent, of, BehaviorSubject, Observable } from 'rxjs';
+import { fromEvent, of, merge, BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { expand, filter, map, share, tap, withLatestFrom } from 'rxjs/operators';
 
 import { AnimationService } from '../animation.service';
@@ -24,11 +24,12 @@ export class GameBgComponent implements AfterViewInit {
     bottom: window.innerHeight,
     right: window.innerWidth
   };
-  ctx: CanvasRenderingContext2D
-  mouseClick$: Observable<Event>;
+  ctx: CanvasRenderingContext2D;
+  frames: Subscription;
+  mouseAction: Subscription;
   mouseClicked = false;
-  mouseMove$: Observable<Event>;
   mousePos = { x: window.innerWidth/2, y: window.innerHeight/2 };
+  resize: Subscription;
 
   constructor(private animationService: AnimationService) { }
 
@@ -36,12 +37,15 @@ export class GameBgComponent implements AfterViewInit {
     // triggered before DOM updates
     this.bgColor = this.animationService.getBgColor();
     this.ctx = (<HTMLCanvasElement>this.gameArea.nativeElement).getContext('2d');
-    this.mouseClick$ = fromEvent(window, 'click');
-    this.mouseClick$.subscribe(() => {
-      this.mouseClicked = true;
-    });
-    this.mouseMove$ = fromEvent(window, 'mousemove');
-    this.mouseMove$.subscribe((e: MouseEvent) => {
+    
+    const mouseClick$ = fromEvent(window, 'click');
+    const mouseMove$ = fromEvent(window, 'mousemove');
+    
+    this.mouseAction = merge(mouseClick$, mouseMove$)
+      .subscribe((e: MouseEvent) => {
+      if (e.type === 'click') {
+        this.mouseClicked = true;
+      }
       this.mousePos = { x: e.clientX, y: e.clientY };
     });
     this.animationService.getCustomInit(this.ctx);
@@ -52,13 +56,13 @@ export class GameBgComponent implements AfterViewInit {
     this.gameArea.nativeElement.width = this.boundaries.right = window.innerWidth;
     this.gameArea.nativeElement.height = this.boundaries.bottom = window.innerHeight;
 
-    fromEvent(window, 'resize').subscribe(() => {
+    this.resize = fromEvent(window, 'resize').subscribe(() => {
       this.gameArea.nativeElement.width = this.boundaries.right = window.innerWidth;
       this.gameArea.nativeElement.height = this.boundaries.bottom = window.innerHeight;
     });
 
     // run game
-    this.frames$.pipe(
+    this.frames = this.frames$.pipe(
       withLatestFrom(this.gameState$),
       map(([deltaTime, gameState]) => this.update(deltaTime, gameState)),
       tap(gameState => this.gameState$.next(gameState))
@@ -109,5 +113,11 @@ export class GameBgComponent implements AfterViewInit {
 
     return this.animationService.getUpdate(this.boundaries, deltaTime,
       click, this.mousePos, state);
+  }
+
+  ngOnDestroy() {
+    this.frames.unsubscribe();
+    this.mouseAction.unsubscribe();
+    this.resize.unsubscribe();
   }
 }
