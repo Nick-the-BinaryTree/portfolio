@@ -1,8 +1,7 @@
 <app-game-bg></app-game-bg>
-<!-- displays improperly if orientation changes to portrait -->
 <div 
     class='full-page connect-container'
-    [style.display]="getOrientationChanged() && !landscape ? 'none' : 'flex'">
+    [style.display]="getOrientationChanged() ? 'none' : 'flex'">
     <a href="https://github.com/Nick-the-BinaryTree"
         rel="noopener noreferrer"
         target="_blank">
