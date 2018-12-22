@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { fromEvent, Subscription } from 'rxjs';
+
+import { OrientationService } from '../orientation.service';
 
 @Component({
   selector: 'app-connect-page',
@@ -7,29 +8,12 @@ import { fromEvent, Subscription } from 'rxjs';
   styleUrls: ['./connect-page.component.css']
 })
 export class ConnectPageComponent implements OnInit {
-  orientation: Subscription;
-  orientationChanged: boolean = false;
-  landscape: boolean = true;
+  
+  constructor(private orientationService: OrientationService) { }
 
-  constructor() { }
+  ngOnInit() { }
 
-  ngOnInit() {
-    this.landscape = this.checkLandscape();
-    this.orientation = fromEvent(window, 'orientationchange')
-      .subscribe(() => {
-        this.orientationChanged = true;
-        this.landscape = this.checkLandscape();
-        console.log(this.landscape)
-      });
+  getOrientationChanged() {
+    return this.orientationService.getOrientationChanged();
   }
-
-  checkLandscape() {
-    console.log(window.innerWidth);
-    return window.innerWidth > window.innerHeight;
-  }
-
-  ngOnDestroy() {
-    this.orientation.unsubscribe();
-  }
-
 }

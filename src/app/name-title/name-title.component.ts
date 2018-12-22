@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { fromEvent, Subscription } from 'rxjs';
+
+import { OrientationService } from '../orientation.service';
 
 @Component({
   selector: 'app-name-title',
@@ -7,20 +8,12 @@ import { fromEvent, Subscription } from 'rxjs';
   styleUrls: ['./name-title.component.css']
 })
 export class NameTitleComponent implements OnInit {
-  orientation: Subscription;
-  orientationChanged: boolean = false;
 
-  constructor() { }
+  constructor(private orientationService: OrientationService) { }
 
-  ngOnInit() {
-    this.orientation = fromEvent(window, 'orientationchange')
-      .subscribe(() => {
-        this.orientationChanged = true;
-      });
+  ngOnInit() { }
+
+  getOrientationChanged() {
+    return this.orientationService.getOrientationChanged();
   }
-
-  ngOnDestroy() {
-    this.orientation.unsubscribe();
-  }
-
 }

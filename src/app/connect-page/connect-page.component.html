@@ -2,7 +2,7 @@
 <!-- displays improperly if orientation changes to portrait -->
 <div 
     class='full-page connect-container'
-    [style.display]="orientationChanged && !landscape ? 'none' : 'flex'">
+    [style.display]="getOrientationChanged() && !landscape ? 'none' : 'flex'">
     <a href="https://github.com/Nick-the-BinaryTree"
         rel="noopener noreferrer"
         target="_blank">
