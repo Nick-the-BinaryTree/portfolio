@@ -16,4 +16,8 @@ export class NameTitleComponent implements OnInit {
   getOrientationChanged() {
     return this.orientationService.getOrientationChanged();
   }
+
+  ngOnDestroy() {
+    this.orientationService.clearOrientationChanged();
+  }
 }

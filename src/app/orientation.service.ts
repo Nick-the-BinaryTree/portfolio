@@ -15,12 +15,15 @@ export class OrientationService {
       });
   }
 
+  clearOrientationChanged() {
+    this.orientationChanged = false;
+  }
+
   getOrientationChanged() {
     return this.orientationChanged;
   }
 
   ngOnDestroy() {
-    this.orientationChanged = false;
     this.orientation.unsubscribe();
   }
 }
