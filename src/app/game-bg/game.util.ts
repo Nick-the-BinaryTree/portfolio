@@ -1,5 +1,6 @@
 import { boundariesType, objVelocity, canvasObj } from '../animation.service';
 import { IFrameData } from './frame.interface';
+import { withLatestFrom } from 'rxjs/operators';
 
 export const clampMag = (value: number, min: number, max:number) => {
     let val = Math.abs(value);
@@ -17,6 +18,28 @@ export const clampTo30FPS = (frame: IFrameData) => {
         frame.deltaTime = 1/30;
     }
     return frame;
+}
+
+export const decreaseOffset = (dt: number, obj: canvasObj, wither: number): canvasObj => {
+    obj.offsetX = decreaseOffset1D(dt, obj.offsetX, wither);
+    obj.offsetY = decreaseOffset1D(dt, obj.offsetY, wither);
+
+    return obj;
+}
+
+export const decreaseOffset1D = (dt: number, offset: number, wither: number): number => {
+    if (offset > 0) {
+        offset -= dt * wither;
+
+        return offset < 0 ? 0 : offset;
+    }
+    offset += dt * wither;
+    
+    return offset > 0 ? 0 : offset;
+}
+
+export const randomOffset = (baseOffset: number): number => {
+    return (Math.random() > 0.5 ? 1 : -1) * (baseOffset + baseOffset*Math.random())
 }
 
 export const randomStartPos = (boundaries: boundariesType, 
@@ -54,7 +77,7 @@ export const runBoundaryCheck = (obj: any, boundaries: boundariesType): string =
     return boundaryHit;
 }
 
-export const trailObjGen = (count: number,
+export const trailObjGen = (count: number, burstOffset: number,
     boundaries: boundariesType, r, v: number, 
     BLUE: string, GREEN: string, RED: string): Array<canvasObj> => {
     const res = [];
@@ -70,9 +93,11 @@ export const trailObjGen = (count: number,
 
         res.push({
             ...randomStartPos(boundaries, r),
-          radius: r,
-          velocity: randomStartVelocityDir(v),
-          color
+            color,
+            offsetX: 0,
+            offsetY: 0,
+            radius: r,
+            velocity: randomStartVelocityDir(v)
         });
     }
     return res;

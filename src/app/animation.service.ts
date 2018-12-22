@@ -1,26 +1,29 @@
 import { Injectable } from '@angular/core';
 import { select, NgRedux } from '@angular-redux/store';
 
-import { Observable, fromEvent } from 'rxjs';
+import { fromEvent, Observable } from 'rxjs';
 
 import { IAppState, PAGE } from './store';
 
-import { randomStartPos, randomStartVelocityDir,
-  runBoundaryCheck, trailObjGen } from './game-bg/game.util';
+import { decreaseOffset, randomOffset, randomStartPos,
+  randomStartVelocityDir, runBoundaryCheck, trailObjGen } from './game-bg/game.util';
 
 export type boundariesType = {top: number, right: number, bottom: number, left: number};
 export type objVelocity = {
   dx: number,
-  dy: number
+  dy: number,
 };
 export type canvasObj = {
+  color: string
   x: number,
   y: number,
+  offsetX?: number,
+  offsetY?: number
   radius: number,
   velocity: objVelocity,
-  color: string
 } | null;
 export type gameStateObj = {objects?: Array<canvasObj>};
+export type mousePosType = { x: number, y: number };
 
 const BLUE = 'rgb(83,109,254,0.1)';
 const GREEN = 'rgb(105,240,174,0.1)';
@@ -34,14 +37,16 @@ const MAX_VELOCITY = 80;
 const MIN_VELOCITY = 20;
 const MID_VELOCITY = (MAX_VELOCITY + MIN_VELOCITY)/2;
 
+const BURST_OFFSET = 140;
+const FOLLOW_SPEED_DRAG = 0.02;
 const NUM_TRAIL_OBJS = 3;
+const WITHER = 120;
 
 @Injectable({
   providedIn: 'root'
 })
 export class AnimationService {
   @select() page: Observable<string>;
-  mousePos: { x: number, y: number };
   pageString: PAGE;
 
   constructor(private ngRedux: NgRedux<IAppState>) {
@@ -52,33 +57,32 @@ export class AnimationService {
   getBgColor(): string {
     switch (this.pageString) {
       case PAGE.CONNECT:
-        return "#000";
+        return '#000';
       case PAGE.LANDING:
-        return "#37464f";
+        return '#37464f';
     }
   }
 
-  getCustomInit() {
+  getCustomInit(ctx: CanvasRenderingContext2D) {
     switch (this.pageString) {
       case PAGE.CONNECT:
-        fromEvent(window, 'mousemove')
-          .subscribe((e: MouseEvent) => {
-            this.mousePos = { x: e.clientX, y: e.clientY };
-          });
+        ctx.globalCompositeOperation = 'destination-out';
+        break;
       case PAGE.LANDING:
-          return;
+        ctx.globalCompositeOperation = 'source-over';
+        break;
     }
   }
 
   getInitObjs(boundaries: boundariesType): Array<any> {
     switch(this.pageString) {
       case PAGE.CONNECT:
-        return trailObjGen(NUM_TRAIL_OBJS, boundaries, MIN_RADIUS,
-          MID_VELOCITY, BLUE, GREEN, RED);
+        return trailObjGen(NUM_TRAIL_OBJS, BURST_OFFSET, boundaries,
+          MIN_RADIUS, MID_VELOCITY, BLUE, GREEN, RED);
       case PAGE.LANDING:
         return [{
           ...randomStartPos(boundaries, MAX_RADIUS),
-          radius: MIN_RADIUS,
+          radius: MAX_RADIUS,
           velocity: randomStartVelocityDir(MIN_VELOCITY),
           color: BLUE
         },
@@ -98,47 +102,38 @@ export class AnimationService {
   }
 
   getRender(ctx: CanvasRenderingContext2D, state: gameStateObj) {
-    let trail: boolean;
-
-    switch(this.pageString) {
-      case PAGE.CONNECT:
-        trail = false;
-      case PAGE.LANDING:
-        trail = true;
-    }
-
-    if (!trail) {
-      ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
-    }
-
+    ctx.fillStyle = 'rgba(0,0,0,0.005)';
+    ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     state['objects'].forEach((obj: canvasObj) => {
       ctx.fillStyle = obj.color;
       ctx.beginPath();
       ctx.arc(obj.x, obj.y, obj.radius, 0, Math.PI*2);
       ctx.fill();
+      ctx.restore();
       ctx.closePath();
     });
   }
 
-  getUpdate(boundaries: boundariesType, 
-    deltaTime: number, state: gameStateObj): gameStateObj {
+  getUpdate(boundaries: boundariesType, deltaTime: number,
+    mouseClicked: boolean, mousePos: mousePosType, state: gameStateObj): gameStateObj {
     if(state['objects'] == null) {
       state['objects'] = this.getInitObjs(boundaries);
     }
     switch(this.pageString) {
       case PAGE.CONNECT:
         state['objects'].forEach((obj: canvasObj) => {
-          const hitBoundary = runBoundaryCheck(obj, boundaries);
-    
-          if (hitBoundary != null) {
-            if (hitBoundary === 'right' || hitBoundary === 'left') {
-              obj.velocity.dx *= -1;
-            } else {
-              obj.velocity.dy *= -1;
-            }
+          const xDist = mousePos.x - obj.x;
+          const yDist = mousePos.y - obj.y;
+
+          if (mouseClicked) {
+            obj.offsetX = randomOffset(BURST_OFFSET);
+            obj.offsetY = randomOffset(BURST_OFFSET);
           }
-          obj.x = obj.x += obj.velocity.dx*deltaTime;
-          obj.y = obj.y += obj.velocity.dy*deltaTime;
+          obj.x += deltaTime * (xDist * FOLLOW_SPEED_DRAG * Math.abs(obj.velocity.dx)
+            + obj.offsetX);
+          obj.y += deltaTime * (yDist * FOLLOW_SPEED_DRAG * Math.abs(obj.velocity.dy)
+            + obj.offsetY);
+          obj = decreaseOffset(deltaTime, obj, WITHER);
         });
         return state;
       case PAGE.LANDING:
@@ -147,13 +142,13 @@ export class AnimationService {
     
           if (hitBoundary != null) {
             if (hitBoundary === 'right' || hitBoundary === 'left') {
-              obj.velocity.dx *= -1;
+              obj.velocity.dy *= -1;
             } else {
               obj.velocity.dy *= -1;
             }
           }
-          obj.x = obj.x += obj.velocity.dx*deltaTime;
-          obj.y = obj.y += obj.velocity.dy*deltaTime;
+          obj.x += obj.velocity.dx*deltaTime;
+          obj.y += obj.velocity.dy*deltaTime;
         });
         return state;
     }

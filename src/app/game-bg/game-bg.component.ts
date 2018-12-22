@@ -24,13 +24,27 @@ export class GameBgComponent implements AfterViewInit {
     bottom: window.innerHeight,
     right: window.innerWidth
   };
+  ctx: CanvasRenderingContext2D
+  mouseClick$: Observable<Event>;
+  mouseClicked = false;
+  mouseMove$: Observable<Event>;
+  mousePos = { x: window.innerWidth/2, y: window.innerHeight/2 };
 
   constructor(private animationService: AnimationService) { }
 
   ngOnInit() {
     // triggered before DOM updates
     this.bgColor = this.animationService.getBgColor();
-    this.animationService.getCustomInit();
+    this.ctx = (<HTMLCanvasElement>this.gameArea.nativeElement).getContext('2d');
+    this.mouseClick$ = fromEvent(window, 'click');
+    this.mouseClick$.subscribe(() => {
+      this.mouseClicked = true;
+    });
+    this.mouseMove$ = fromEvent(window, 'mousemove');
+    this.mouseMove$.subscribe((e: MouseEvent) => {
+      this.mousePos = { x: e.clientX, y: e.clientY };
+    });
+    this.animationService.getCustomInit(this.ctx);
   }
 
   ngAfterViewInit() {
@@ -83,13 +97,17 @@ export class GameBgComponent implements AfterViewInit {
   gameState$ = new BehaviorSubject({});
 
   render(state: gameStateObj) {
-    const ctx: CanvasRenderingContext2D 
-      = (<HTMLCanvasElement>this.gameArea.nativeElement).getContext('2d');
-
-    this.animationService.getRender(ctx, state);
+    this.animationService.getRender(this.ctx, state);
   };
 
   update(deltaTime: number, state: gameStateObj): gameStateObj {
-    return this.animationService.getUpdate(this.boundaries, deltaTime, state);
+    const click = this.mouseClicked;
+
+    if (click) {
+      this.mouseClicked = false;
+    }
+
+    return this.animationService.getUpdate(this.boundaries, deltaTime,
+      click, this.mousePos, state);
   }
 }
