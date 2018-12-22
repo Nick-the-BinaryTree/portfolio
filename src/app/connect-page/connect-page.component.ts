@@ -9,7 +9,6 @@ export class ConnectPageComponent implements OnInit {
 
   constructor() { }
 
-  ngOnInit() {
-  }
+  ngOnInit() { }
 
 }

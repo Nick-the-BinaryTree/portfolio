@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { select, NgRedux } from '@angular-redux/store';
 
-import { fromEvent, Observable, Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 
 import { IAppState, PAGE } from './store';
 
@@ -51,7 +51,6 @@ export class AnimationService {
   pageString: PAGE;
 
   constructor(private ngRedux: NgRedux<IAppState>) {
-    // apparently, this doesn't work in the Angular init methods
     this.pageChange = this.page$.subscribe((x: PAGE) => {this.pageString = x});
    }
 
@@ -60,7 +59,7 @@ export class AnimationService {
       case PAGE.CONNECT:
         return '#000';
       case PAGE.LANDING:
-        return '#37464f';
+        return '#1c2328';
     }
   }
 

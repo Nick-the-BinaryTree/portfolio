@@ -1,0 +1,19 @@
+img {
+    width: 15vw;
+    max-width: 138px;
+    height: auto;
+
+    opacity: .72;
+    user-drag: none; 
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-drag: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+}
+
+.connect-container {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}

@@ -1,6 +1,5 @@
 import { boundariesType, objVelocity, canvasObj } from '../animation.service';
 import { IFrameData } from './frame.interface';
-import { withLatestFrom } from 'rxjs/operators';
 
 export const clampMag = (value: number, min: number, max:number) => {
     let val = Math.abs(value);

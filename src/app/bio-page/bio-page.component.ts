@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { fromEvent, Subscription } from 'rxjs';
+import { NavigationService } from '../navigation.service';
 
 type urlsObj = { full: string, regular: string, small: string };
 
@@ -36,7 +37,7 @@ export class BioPageComponent implements OnInit {
   resizeHandler: Subscription;
   windowWidthCategory: number = 0;
 
-  constructor() { }
+  constructor(private navigationService: NavigationService) { }
 
   ngOnInit() {
     this.fetchBackground();
