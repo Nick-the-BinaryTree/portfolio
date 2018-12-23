@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 import { fromEvent, Subscription } from 'rxjs';
 
-import * as innerHeight from 'ios-inner-height';
-
 @Injectable({
   providedIn: 'root'
 })
@@ -34,7 +32,11 @@ export class WindowService {
   }
 
   getHeight(): number {
-    return innerHeight();
+    if (navigator.platform === 'iPad' || navigator.platform === 'iPhone'
+      || navigator.platform === 'iPod') {
+        return screen.height;
+      }
+    return window.innerHeight;
   }
 
   ngOnDestroy() {

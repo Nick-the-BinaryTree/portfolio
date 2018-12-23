@@ -54,7 +54,8 @@ export class GameBgComponent implements AfterViewInit {
 
   ngAfterViewInit() {
     this.updateDimensions();
-    this.resize = fromEvent(window, 'resize').subscribe(() => {
+    this.resize = merge(fromEvent(window, 'resize'), fromEvent(window, 'orientationChange'))
+      .subscribe(() => {
       this.updateDimensions();
     });
 
@@ -115,6 +116,7 @@ export class GameBgComponent implements AfterViewInit {
   updateDimensions() {
     this.gameArea.nativeElement.width = this.boundaries.right = this.windowService.getWidth();
     this.gameArea.nativeElement.height = this.boundaries.bottom = this.windowService.getHeight();
+    console.log(this.windowService.getWidth() + ' x ' + this.windowService.getHeight() + '\n')
   }
 
   ngOnDestroy() {
