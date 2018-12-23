@@ -1,4 +1,5 @@
 body, html {
+    cursor: pointer; /* for iOS Safari to get click events */
     overflow: hidden;
     touch-action: none;
 
