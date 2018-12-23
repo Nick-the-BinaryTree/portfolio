@@ -24,19 +24,13 @@ export class WindowService {
   }
 
   getWidth(): number {
-    if (navigator.platform === 'iPad' || navigator.platform === 'iPhone'
-      || navigator.platform === 'iPod') {
-        return screen.width;
-      }
-    return window.innerWidth;
+    return window.innerWidth ? window.innerWidth 
+      : document.documentElement.clientWidth;
   }
 
   getHeight(): number {
-    if (navigator.platform === 'iPad' || navigator.platform === 'iPhone'
-      || navigator.platform === 'iPod') {
-        return screen.height;
-      }
-    return window.innerHeight;
+    return window.innerHeight ? window.innerHeight
+     : document.documentElement.clientHeight;
   }
 
   ngOnDestroy() {
