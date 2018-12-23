@@ -1,12 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 
-import { OrientationService } from './orientation.service';
+import { WindowService } from './window.service';
 
 describe('OrientationService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: OrientationService = TestBed.get(OrientationService);
+    const service: WindowService = TestBed.get(WindowService);
     expect(service).toBeTruthy();
   });
 });

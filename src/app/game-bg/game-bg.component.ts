@@ -9,6 +9,7 @@ import { IFrameData } from './frame.interface';
 import { clampTo30FPS } from './game.util';
 
 import { boundariesType, gameStateObj } from '../animation.service';
+import { WindowService } from '../window.service';
 
 @Component({
   selector: 'app-game-bg',
@@ -21,23 +22,23 @@ export class GameBgComponent implements AfterViewInit {
   boundaries: boundariesType = {
     left: 0,
     top: 0,
-    bottom: window.innerHeight,
-    right: window.innerWidth
+    bottom: 0,
+    right: 0
   };
   ctx: CanvasRenderingContext2D;
   frames: Subscription;
   mouseAction: Subscription;
   mouseClicked = false;
-  mousePos = { x: window.innerWidth/2, y: window.innerHeight/2 };
+  mousePos = { x: 500, y: 500 };
   resize: Subscription;
 
-  constructor(private animationService: AnimationService) { }
+  constructor(private animationService: AnimationService, private windowService: WindowService) { }
 
   ngOnInit() {
     // triggered before DOM updates
     this.bgColor = this.animationService.getBgColor();
     this.ctx = (<HTMLCanvasElement>this.gameArea.nativeElement).getContext('2d');
-    
+
     const mouseClick$ = fromEvent(window, 'click');
     const mouseMove$ = fromEvent(window, 'mousemove');
     
@@ -52,13 +53,9 @@ export class GameBgComponent implements AfterViewInit {
   }
 
   ngAfterViewInit() {
-    // this does not appear to work with template directives
-    this.gameArea.nativeElement.width = this.boundaries.right = window.innerWidth;
-    this.gameArea.nativeElement.height = this.boundaries.bottom = window.innerHeight;
-
+    this.updateDimensions();
     this.resize = fromEvent(window, 'resize').subscribe(() => {
-      this.gameArea.nativeElement.width = this.boundaries.right = window.innerWidth;
-      this.gameArea.nativeElement.height = this.boundaries.bottom = window.innerHeight;
+      this.updateDimensions();
     });
 
     // run game
@@ -113,6 +110,11 @@ export class GameBgComponent implements AfterViewInit {
 
     return this.animationService.getUpdate(this.boundaries, deltaTime,
       click, this.mousePos, state);
+  }
+
+  updateDimensions() {
+    this.gameArea.nativeElement.width = this.boundaries.right = this.windowService.getWidth();
+    this.gameArea.nativeElement.height = this.boundaries.bottom = this.windowService.getHeight();
   }
 
   ngOnDestroy() {

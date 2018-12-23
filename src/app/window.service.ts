@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
 import { fromEvent, Subscription } from 'rxjs';
 
+import * as innerHeight from 'ios-inner-height';
+
 @Injectable({
   providedIn: 'root'
 })
-export class OrientationService {
+export class WindowService {
   orientation: Subscription;
   orientationChanged: boolean = false;
 
@@ -19,8 +21,20 @@ export class OrientationService {
     this.orientationChanged = false;
   }
 
-  getOrientationChanged() {
+  getOrientationChanged(): boolean {
     return this.orientationChanged;
+  }
+
+  getWidth(): number {
+    if (navigator.platform === 'iPad' || navigator.platform === 'iPhone'
+      || navigator.platform === 'iPod') {
+        return screen.width;
+      }
+    return window.innerWidth;
+  }
+
+  getHeight(): number {
+    return innerHeight();
   }
 
   ngOnDestroy() {

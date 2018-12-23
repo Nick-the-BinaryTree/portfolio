@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import { OrientationService } from '../orientation.service';
+import { WindowService } from '../window.service';
 
 @Component({
   selector: 'app-connect-page',
@@ -9,11 +9,11 @@ import { OrientationService } from '../orientation.service';
 })
 export class ConnectPageComponent implements OnInit {
   
-  constructor(private orientationService: OrientationService) { }
+  constructor(private windowService: WindowService) { }
 
   ngOnInit() { }
 
   getOrientationChanged() {
-    return this.orientationService.getOrientationChanged();
+    return this.windowService.getOrientationChanged();
   }
 }

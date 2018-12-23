@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import { OrientationService } from '../orientation.service';
+import { WindowService } from '../window.service';
 
 @Component({
   selector: 'app-name-title',
@@ -9,15 +9,15 @@ import { OrientationService } from '../orientation.service';
 })
 export class NameTitleComponent implements OnInit {
 
-  constructor(private orientationService: OrientationService) { }
+  constructor(private windowService: WindowService) { }
 
   ngOnInit() { }
 
   getOrientationChanged() {
-    return this.orientationService.getOrientationChanged();
+    return this.windowService.getOrientationChanged();
   }
 
   ngOnDestroy() {
-    this.orientationService.clearOrientationChanged();
+    this.windowService.clearOrientationChanged();
   }
 }

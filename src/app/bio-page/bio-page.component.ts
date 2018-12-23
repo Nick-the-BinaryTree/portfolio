@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { fromEvent, Subscription } from 'rxjs';
 import { NavigationService } from '../navigation.service';
+import { WindowService } from '../window.service';
 
 type urlsObj = { full: string, regular: string, small: string };
 
@@ -37,7 +38,7 @@ export class BioPageComponent implements OnInit {
   resizeHandler: Subscription;
   windowWidthCategory: number = 0;
 
-  constructor(private navigationService: NavigationService) { }
+  constructor(private navigationService: NavigationService, private windowService: WindowService) { }
 
   ngOnInit() {
     this.fetchBackground();
@@ -90,9 +91,9 @@ export class BioPageComponent implements OnInit {
   }
 
   getWindowWidthCategory(): number {
-    if (window.innerWidth > MEDIUM_WIDTH) {
+    if (this.windowService.getWidth() > MEDIUM_WIDTH) {
       return 3;
-    } else if (window.innerWidth > MOBILE_WIDTH) {
+    } else if (this.windowService.getWidth() > MOBILE_WIDTH) {
       return 2;
     }
     return 1;
