@@ -116,7 +116,7 @@ export class GameBgComponent implements AfterViewInit {
   updateDimensions() {
     this.gameArea.nativeElement.width = this.boundaries.right = this.windowService.getWidth();
     this.gameArea.nativeElement.height = this.boundaries.bottom = this.windowService.getHeight();
-    console.log(this.windowService.getWidth() + ' x ' + this.windowService.getHeight() + '\n')
+    // console.log(this.windowService.getWidth() + ' x ' + this.windowService.getHeight() + '\n')
   }
 
   ngOnDestroy() {
