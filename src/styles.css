@@ -1,6 +1,6 @@
 body, html {
     /* ohhh, iOS */
-    cursor: pointer;
+    /* cursor: pointer; */
     touch-action: none;
     -webkit-text-size-adjust: 100%;
     -moz-text-size-adjust: 100%;

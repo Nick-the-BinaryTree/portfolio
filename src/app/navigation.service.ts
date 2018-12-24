@@ -21,8 +21,9 @@ export class NavigationService {
         
         const keyUp$ = fromEvent(document.body, 'keyup');
         const mouseClick$ = fromEvent(document.body, 'click');
+        const touch$ = fromEvent(document.body, 'touchstart');
 
-        this.userAction = merge(keyUp$, mouseClick$)
+        this.userAction = merge(keyUp$, mouseClick$, touch$)
           .subscribe((e: any) => {
             if (e.key != null) {
               if (e.key === 'm' && this.munCode === 0
