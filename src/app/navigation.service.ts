@@ -2,6 +2,7 @@ import { Injectable, OnInit } from '@angular/core';
 import { select, NgRedux } from '@angular-redux/store';
 
 import { fromEvent, merge, Observable, Subscription } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
 
 import { GOTO_BIO_PAGE, GOTO_CONNECT_PAGE, GOTO_MUN_PAGE } from './actions';
 import { IAppState, PAGE } from './store';
@@ -21,9 +22,10 @@ export class NavigationService {
         
         const keyUp$ = fromEvent(document.body, 'keyup');
         const mouseClick$ = fromEvent(document.body, 'click');
-        const touch$ = fromEvent(document.body, 'touchstart');
+        const touch$ = fromEvent(document.body, 'touchend');
 
         this.userAction = merge(keyUp$, mouseClick$, touch$)
+          .pipe(debounceTime(500))
           .subscribe((e: any) => {
             if (e.key != null) {
               if (e.key === 'm' && this.munCode === 0
