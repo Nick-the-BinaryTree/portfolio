@@ -52,11 +52,8 @@ export class BioPageComponent implements OnInit {
 //      + '&orientation=landscape'
 
 
-      const response = await fetch(query);
-      console.log(query);
-      
+      const response = await fetch(query);      
       this.bgInfo = await response.json();
-      console.log(this.bgInfo)
     } catch(e) { }
     this.windowWidthCategory = this.getWindowWidthCategory();
 
