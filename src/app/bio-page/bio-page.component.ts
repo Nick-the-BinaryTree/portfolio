@@ -7,7 +7,7 @@ type urlsObj = { full: string, regular: string, small: string };
 
 const APP_NAME = 'nicholashartunian.com';
 const CLIENT_ID = '813f1db96865d9d36ff6e9d5623b0da770d4b7bd4c05e6a764161e3460135296';
-const BG_COLLECTION_ID = '3684874';
+const BG_COLLECTION_ID = '3732344';
 const DEFAULT_BG_INFO = {
   urls: {
     full: 'https://raw.githubusercontent.com/Nick-the-BinaryTree/nick-the-binarytree.github.io/master/src/assets/bgL.jpg',
@@ -46,12 +46,17 @@ export class BioPageComponent implements OnInit {
 
   async fetchBackground() {
     try {
-      const response = await fetch('https://api.unsplash.com/photos/random/'
-        + '?collections=' + BG_COLLECTION_ID
-        + '&orientation=landscape'
-        + '&client_id=' + CLIENT_ID);
+      const query = 'https://api.unsplash.com/photos/random/'
+      + '?collections=' + BG_COLLECTION_ID
+      + '&client_id=' + CLIENT_ID;
+//      + '&orientation=landscape'
+
+
+      const response = await fetch(query);
+      console.log(query);
       
       this.bgInfo = await response.json();
+      console.log(this.bgInfo)
     } catch(e) { }
     this.windowWidthCategory = this.getWindowWidthCategory();
 
@@ -61,7 +66,7 @@ export class BioPageComponent implements OnInit {
       this.bgInfo = DEFAULT_BG_INFO;
       ({ html, name, urls } = this.getBgData(this.bgInfo));
     }
-    this.bgURL = this.getSizedBg(this.windowWidthCategory, urls)
+    this.bgURL = this.getSizedBg(this.windowWidthCategory, urls);
     this.photographerName = name;
     this.photographerURL = this.getUTMURL(html);
 
