@@ -9,4 +9,4 @@
 6. `yarn build`
 7. Copy the `body` tags of `index.html` in `dist` over the `body` of `index.html` in root.
 8. Open root `index.html` in a browser, and confirm it's not a white screen.
-
+9. Git add, commit, and push!
